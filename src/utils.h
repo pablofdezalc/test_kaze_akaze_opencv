@@ -50,3 +50,13 @@ void matches2points_nndr(const std::vector<cv::KeyPoint>& train,
 void compute_inliers_homography(const std::vector<cv::Point2f>& matches,
                                 std::vector<cv::Point2f>& inliers,
                                 const cv::Mat& H, const float h_max_error);
+
+/**
+ * @brief This function draws the set of the inliers between the two images
+ * @param img1 First image
+ * @param img2 Second image
+ * @param img_com Image with the inliers
+ * @param ptpairs Vector of point pairs with the set of inliers
+ */
+void draw_inliers(const cv::Mat& img1, const cv::Mat& imgN, cv::Mat& img_com,
+                  const std::vector<cv::Point2f>& ptpairs);

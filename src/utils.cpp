@@ -127,3 +127,48 @@ void compute_inliers_homography(const std::vector<cv::Point2f>& matches,
     }
   }
 }
+
+
+/* ************************************************************************* */
+void draw_inliers(const cv::Mat& img1, const cv::Mat& imgN, cv::Mat& img_com,
+                  const std::vector<cv::Point2f>& ptpairs) {
+
+  int x1 = 0, y1 = 0, xN = 0, yN = 0;
+  float rows1 = 0.0, cols1 = 0.0;
+  float rowsN = 0.0, colsN = 0.0;
+  float ufactor = 0.0, vfactor = 0.0;
+
+  rows1 = img1.rows;
+  cols1 = img1.cols;
+  rowsN = imgN.rows;
+  colsN = imgN.cols;
+  ufactor = (float)(cols1)/(float)(colsN);
+  vfactor = (float)(rows1)/(float)(rowsN);
+
+  // This is in case the input images don't have the same resolution
+  cv::Mat img_aux = cv::Mat(cv::Size(img1.cols, img1.rows), CV_8UC3);
+  cv::resize(imgN, img_aux, cv::Size(img1.cols, img1.rows), 0, 0, cv::INTER_LINEAR);
+
+  for (int i = 0; i < img_com.rows; i++) {
+    for (int j = 0; j < img_com.cols; j++) {
+      if (j < img1.cols) {
+        *(img_com.ptr<unsigned char>(i)+3*j) = *(img1.ptr<unsigned char>(i)+3*j);
+        *(img_com.ptr<unsigned char>(i)+3*j+1) = *(img1.ptr<unsigned char>(i)+3*j+1);
+        *(img_com.ptr<unsigned char>(i)+3*j+2) = *(img1.ptr<unsigned char>(i)+3*j+2);
+      }
+      else {
+        *(img_com.ptr<unsigned char>(i)+3*j) = *(imgN.ptr<unsigned char>(i)+3*(j-img_aux.cols));
+        *(img_com.ptr<unsigned char>(i)+3*j+1) = *(imgN.ptr<unsigned char>(i)+3*(j-img_aux.cols)+1);
+        *(img_com.ptr<unsigned char>(i)+3*j+2) = *(imgN.ptr<unsigned char>(i)+3*(j-img_aux.cols)+2);
+      }
+    }
+  }
+
+  for (size_t i = 0; i < ptpairs.size(); i+= 2) {
+    x1 = (int)(ptpairs[i].x+.5);
+    y1 = (int)(ptpairs[i].y+.5);
+    xN = (int)(ptpairs[i+1].x*ufactor+img1.cols+.5);
+    yN = (int)(ptpairs[i+1].y*vfactor+.5);
+    cv::line(img_com, cv::Point(x1,y1), cv::Point(xN,yN), CV_RGB(255,0,0), 2);
+  }
+}

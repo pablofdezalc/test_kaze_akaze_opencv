@@ -87,5 +87,16 @@ int main(int argc, char *argv[]) {
   cout << "Time Detection+Description (ms):      \t" << tkaze << endl;
   cout << "Time Matching (ms):                   \t" << tmatch << endl;
   cout << endl;
+
+  // Visualization
+  cv::Mat img_com = cv::Mat(cv::Size(2*img1.cols, img1.rows), CV_8UC3);
+  draw_keypoints(img1, kpts1);
+  draw_keypoints(imgN, kptsN);
+  draw_inliers(img1, imgN, img_com, inliers);
+
+  cv::namedWindow("KAZE Matching", cv::WINDOW_KEEPRATIO);
+  cv::imshow("KAZE Matching", img_com);
+  cv::waitKey(0);
+
   return 1;
 }
