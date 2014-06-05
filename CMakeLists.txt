@@ -37,6 +37,17 @@ target_link_libraries(
   ${OpenCV_LIBS}
 )
 
+add_executable(
+  test_kaze_match
+  test_kaze_match.cpp
+  ${SRCS}
+)
+
+target_link_libraries(
+  test_kaze_match
+  ${OpenCV_LIBS}
+)
+
 # ============================================================================ #
 # A-KAZE tests
 add_executable(
