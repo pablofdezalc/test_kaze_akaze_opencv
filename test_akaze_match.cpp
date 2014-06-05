@@ -35,21 +35,21 @@ int main(int argc, char *argv[]) {
   cv::Mat H1toN = read_homography(HFile);
 
   // Create A-KAZE object
-  cv::KAZE dkaze;
+  cv::AKAZE dakaze;
 
   // Timing information
   double t1 = 0.0, t2 = 0.0;
-  double tkaze = 0.0, tmatch = 0.0;
+  double takaze = 0.0, tmatch = 0.0;
 
-  // Detect KAZE features in the images
+  // Detect A-KAZE features in the images
   vector<cv::KeyPoint> kpts1, kptsN;
   cv::Mat desc1, descN;
 
   t1 = cv::getTickCount();
-  dkaze(img1, cv::noArray(), kpts1, desc1);
-  dkaze(imgN, cv::noArray(), kptsN, descN);
+  dakaze(img1, cv::noArray(), kpts1, desc1);
+  dakaze(imgN, cv::noArray(), kptsN, descN);
   t2 = cv::getTickCount();
-  tkaze = 1000.0*(t2-t1) / cv::getTickFrequency();
+  takaze = 1000.0*(t2-t1) / cv::getTickFrequency();
 
   int nr_kpts1 = kpts1.size();
   int nr_kptsN = kptsN.size();
@@ -57,11 +57,11 @@ int main(int argc, char *argv[]) {
   // Match the descriptors using NNDR matching strategy
   vector<vector<cv::DMatch> > dmatches;
   vector<cv::Point2f> matches, inliers;
-  cv::Ptr<cv::DescriptorMatcher> matcher_l2 = cv::DescriptorMatcher::create("BruteForce");
+  cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create("BruteForce-Hamming");
   float nndr = 0.8;
 
   t1 = cv::getTickCount();
-  matcher_l2->knnMatch(desc1, descN, dmatches, 2);
+  matcher->knnMatch(desc1, descN, dmatches, 2);
   matches2points_nndr(kpts1, kptsN, dmatches, matches, nndr);
   t2 = cv::getTickCount();
   tmatch = 1000.0*(t2-t1) / cv::getTickFrequency();
@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
   int nr_outliers = nr_matches - nr_inliers;
   float ratio = 100.0*((float) nr_inliers / (float) nr_matches);
 
-  cout << "KAZE Matching Results" << endl;
+  cout << "A-KAZE Matching Results" << endl;
   cout << "*******************************" << endl;
   cout << "# Keypoints 1:                        \t" << nr_kpts1 << endl;
   cout << "# Keypoints N:                        \t" << nr_kptsN << endl;
@@ -84,8 +84,19 @@ int main(int argc, char *argv[]) {
   cout << "# Inliers:                            \t" << nr_inliers << endl;
   cout << "# Outliers:                           \t" << nr_outliers << endl;
   cout << "Inliers Ratio (%):                    \t" << ratio << endl;
-  cout << "Time Detection+Description (ms):      \t" << tkaze << endl;
+  cout << "Time Detection+Description (ms):      \t" << takaze << endl;
   cout << "Time Matching (ms):                   \t" << tmatch << endl;
   cout << endl;
+
+  // Visualization
+  cv::Mat img_com = cv::Mat(cv::Size(2*img1.cols, img1.rows), CV_8UC3);
+  draw_keypoints(img1, kpts1);
+  draw_keypoints(imgN, kptsN);
+  draw_inliers(img1, imgN, img_com, inliers);
+
+  cv::namedWindow("A-KAZE Matching", cv::WINDOW_KEEPRATIO);
+  cv::imshow("A-KAZE Matching", img_com);
+  cv::waitKey(0);
+
   return 1;
 }

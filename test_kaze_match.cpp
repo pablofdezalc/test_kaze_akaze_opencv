@@ -57,11 +57,11 @@ int main(int argc, char *argv[]) {
   // Match the descriptors using NNDR matching strategy
   vector<vector<cv::DMatch> > dmatches;
   vector<cv::Point2f> matches, inliers;
-  cv::Ptr<cv::DescriptorMatcher> matcher_l2 = cv::DescriptorMatcher::create("BruteForce");
+  cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create("BruteForce");
   float nndr = 0.8;
 
   t1 = cv::getTickCount();
-  matcher_l2->knnMatch(desc1, descN, dmatches, 2);
+  matcher->knnMatch(desc1, descN, dmatches, 2);
   matches2points_nndr(kpts1, kptsN, dmatches, matches, nndr);
   t2 = cv::getTickCount();
   tmatch = 1000.0*(t2-t1) / cv::getTickFrequency();
