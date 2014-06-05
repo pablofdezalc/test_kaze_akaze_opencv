@@ -60,3 +60,14 @@ target_link_libraries(
   test_akaze
   ${OpenCV_LIBS}
 )
+
+add_executable(
+  test_akaze_match
+  test_akaze_match.cpp
+  ${SRCS}
+)
+
+target_link_libraries(
+  test_akaze_match
+  ${OpenCV_LIBS}
+)
