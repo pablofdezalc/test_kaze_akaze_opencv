@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
   img = imread(imgFile, 1);
 
   // Create KAZE object
-  cv::AKAZE dakaze;
+  Ptr<Feature2D> dakaze = AKAZE::create();
 
   // Timing information
   double t1 = 0.0, t2 = 0.0;
@@ -43,7 +43,7 @@ int main(int argc, char *argv[]) {
   cv::Mat desc;
 
   t1 = cv::getTickCount();
-  dakaze(img, cv::noArray(), kpts, desc, false);
+  dakaze->detectAndCompute(img, cv::noArray(), kpts, desc, false);
   t2 = cv::getTickCount();
   takaze = 1000.0*(t2-t1) / cv::getTickFrequency();
 

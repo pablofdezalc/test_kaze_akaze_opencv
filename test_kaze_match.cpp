@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
   cv::Mat H1toN = read_homography(HFile);
 
   // Create KAZE object
-  cv::KAZE dkaze;
+  Ptr<Feature2D> dkaze = KAZE::create();
 
   // Timing information
   double t1 = 0.0, t2 = 0.0;
@@ -46,8 +46,8 @@ int main(int argc, char *argv[]) {
   cv::Mat desc1, descN;
 
   t1 = cv::getTickCount();
-  dkaze(img1, cv::noArray(), kpts1, desc1);
-  dkaze(imgN, cv::noArray(), kptsN, descN);
+  dkaze->detectAndCompute(img1, cv::noArray(), kpts1, desc1);
+  dkaze->detectAndCompute(imgN, cv::noArray(), kptsN, descN);
   t2 = cv::getTickCount();
   tkaze = 1000.0*(t2-t1) / cv::getTickFrequency();
 

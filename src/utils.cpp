@@ -20,8 +20,8 @@ void draw_keypoints(cv::Mat& img, const std::vector<cv::KeyPoint>& kpts) {
     x = (int)(kpts[i].pt.x+.5);
     y = (int)(kpts[i].pt.y+.5);
     radius = kpts[i].size/2.0;
-    cv::circle(img, cv::Point(x,y), 2.5*radius, CV_RGB(0,255,0), 1);
-    cv::circle(img, cv::Point(x,y), 1.0, CV_RGB(0,0,255), -1);
+    cv::circle(img, cv::Point(x,y), 2.5*radius, cv::Scalar(0,255,0), 1);
+    cv::circle(img, cv::Point(x,y), 1.0, cv::Scalar(0,0,255), -1);
   }
 }
 
@@ -169,6 +169,6 @@ void draw_inliers(const cv::Mat& img1, const cv::Mat& imgN, cv::Mat& img_com,
     y1 = (int)(ptpairs[i].y+.5);
     xN = (int)(ptpairs[i+1].x*ufactor+img1.cols+.5);
     yN = (int)(ptpairs[i+1].y*vfactor+.5);
-    cv::line(img_com, cv::Point(x1,y1), cv::Point(xN,yN), CV_RGB(255,0,0), 2);
+    cv::line(img_com, cv::Point(x1,y1), cv::Point(xN,yN), cv::Scalar(255,0,0), 2);
   }
 }
