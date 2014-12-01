@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
   img = imread(imgFile, 1);
 
   // Create KAZE object
-  cv::KAZE dkaze;
+  Ptr<Feature2D> dkaze = KAZE::create();
 
   // Timing information
   double t1 = 0.0, t2 = 0.0;
@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
   vector<cv::KeyPoint> kpts;
 
   t1 = cv::getTickCount();
-  dkaze(img, cv::noArray(), kpts);
+  dkaze->detect(img, kpts, cv::noArray());//, kpts);
   t2 = cv::getTickCount();
   tkaze = 1000.0*(t2-t1) / cv::getTickFrequency();
 
