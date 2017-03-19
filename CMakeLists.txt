@@ -9,7 +9,7 @@ endif(COMMAND cmake_policy)
 
 # ============================================================================ #
 # OpenCV
-find_package(OpenCV REQUIRED)
+find_package(OpenCV 3.0 REQUIRED)
 message("-- OPENCV include:   " ${OpenCV_INCLUDE_DIRS})
 
 include_directories(
